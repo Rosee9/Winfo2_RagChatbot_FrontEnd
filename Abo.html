@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="Abo.css">
+</head>
+<body>
+    <div class="background">
+        <div class="container">
+          <div class="panel pricing-table">
+            
+            <div class="pricing-plan">
+              <img src="https://s22.postimg.cc/8mv5gn7w1/paper-plane.png" alt="" class="pricing-img">
+              <h2 class="pricing-header">Basic</h2>
+              <ul class="pricing-features">
+                <li class="pricing-features-item">48h Support</li>
+                <li class="pricing-features-item">3GB Cloud</li>
+                <li class="pricing-features-item">1000 Tokans</li>
+              </ul>
+              <span class="pricing-price">$5</span>
+              <a href="#" class="pricing-button" onclick="selectPlan('Basic')">Basic</a>
+            </div>
+            
+            <div class="pricing-plan">
+              <img src="https://s28.postimg.cc/ju5bnc3x9/plane.png" alt="" class="pricing-img">
+              <h2 class="pricing-header">Premium</h2>
+              <ul class="pricing-features">
+                <li class="pricing-features-item">24h Support</li>
+                <li class="pricing-features-item">10GB Cloud</li>
+                <li class="pricing-features-item">10000 Tokans</li>
+              </ul>
+              <span class="pricing-price">$50</span>
+              <a href="#" class="pricing-button is-featured" onclick="selectPlan('Premium')">Premium</a>
+            </div>
+            
+            <div class="pricing-plan">
+              <img src="https://s21.postimg.cc/tpm0cge4n/space-ship.png" alt="" class="pricing-img">
+              <h2 class="pricing-header">Enterprise</h2>
+              <ul class="pricing-features">
+                <li class="pricing-features-item">personal support</li>
+                <li class="pricing-features-item">50GB Cloud</li>
+                <li class="pricing-features-item">50000 Tokans</li>
+              </ul>
+              <span class="pricing-price">$100</span>
+              <a href="#" class="pricing-button" onclick="selectPlan('Enterprise')">Enterprise</a>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+    <script>
+      function selectPlan(planName) {
+          localStorage.setItem('selectedPlan', planName);
+          window.location.href = 'Paymant_index.html'
+      }
+    </script>
+</body>
+</html>

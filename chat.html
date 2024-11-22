@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Chatbot UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Chat.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2 id="welcomeMessage" >Welcome to Chatbot</h2>
+        </div>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+    <script>
+
+        const name = localStorage.getItem('signupName') || 'Guest';
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+
+            // Finde das h2 Element und füge den Namen ein
+            const welcomeMessageElement = document.getElementById('welcomeMessage');
+            welcomeMessageElement.textContent = `Welcome to Chatbot, ${name}`;
+        });
+
+        document.getElementById('sendButton').addEventListener('click', sendMessage);
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') sendMessage();
+});
+
+function sendMessage() {
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+    const messageText = userInput.value.trim();
+
+    if (!messageText) return;
+
+    // Add user's message to the chat
+    const userMessage = document.createElement('div');
+    userMessage.className = 'message user-message';
+    userMessage.textContent = messageText;
+    chatBox.prepend(userMessage);
+
+    // Clear the input field
+    userInput.value = '';
+
+    // Fetch response from backend - using GET request
+    fetch(`http://localhost:8080/message?message=${encodeURIComponent(messageText)}`)
+        .then(response => response.text())
+        .then(data => {
+            const botMessage = document.createElement('div');
+            botMessage.className = 'message bot-message';
+            botMessage.textContent = data; // Expecting a plain text response
+            chatBox.prepend(botMessage);
+        })
+        .catch(() => {
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'message error-message';
+            errorMessage.textContent = 'Keine Verbindung gefunden';
+            chatBox.prepend(errorMessage);
+        });
+}
+    </script>
+</body>
+</html>

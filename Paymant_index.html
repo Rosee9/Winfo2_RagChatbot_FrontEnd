@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Link auf ein einfaches CSS- für das nächste und vorige Knöpfe -->
+    <link rel="stylesheet" href="style_paymant.css">
+    <!-- Binde jQuery ein, um sicherzustellen, dass jQuery-Methoden funktionieren -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Easing Plugin, wenn erforderlich -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+</head>
+<body>
+
+    <!-- Multistep form -->
+    <form id="msform">
+        <!-- Progress bar -->
+        <ul id="progressbar">
+            <li class="active">Account Setup</li>
+            <li>Abo</li>
+            <li>Payment</li>
+        </ul>
+        <!-- Fieldsets -->
+        <fieldset>
+            <h2 class="fs-title">Account Data</h2>
+            <h3 class="fs-subtitle">This is step 1</h3>
+            <input type="text" name="email" id="email" placeholder="Email" disabled />
+            <input type="password" name="pass" id="pass" placeholder="Password" disabled/>
+            <input type="text" name="cpass" id="cpass" placeholder="Name" disabled />
+            <input type="button" name="previous" class="next action-button" id="abos" value="Abo" />
+            <input type="button" name="next" class="next action-button" value="Next" />
+        </fieldset>
+        <fieldset>
+            <h2 class="fs-title">Abo</h2>
+            <h3 class="fs-subtitle">Your subscription selection</h3>
+            <input type="text" name="abo" id='abo' placeholder="Abo" disabled/>
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+            <input type="button" name="next" class="next action-button" value="Next" />
+        </fieldset>
+        <fieldset>
+            <h2 class="fs-title">Payment</h2>
+            <h3 class="fs-subtitle">Only credit cards are currently supported</h3>
+            <input type="text" name="card" placeholder="Card number" id="card" />
+            <input type="text" name="expiry" placeholder="Expiry date" id="date" />
+            <input type="text" name="code" placeholder="Security code" id="pin" />
+            <textarea name="address" placeholder="Comment"></textarea>
+            <div>
+                <label for="agb">
+                  <input type="checkbox" id="agb" name="agb"> Ich stimme den AGB zu
+                </label>
+                <div class="agb-text">
+                  Bitte lesen Sie unsere <a href="#" style="color: #007BFF;">Allgemeinen Geschäftsbedingungen</a> sorgfältig durch.
+                </div>
+              </div>
+            <br>
+            <input type="button" name="previous" class="previous action-button" value="Previous" />
+            <a href="#" class="submit action-button" target="_top" onclick="regist()">Submit</a>
+        </fieldset>
+    </form>
+
+    <script>
+        document.getElementById('abos').addEventListener('click', function() {
+            window.open('Abo.html', '_blank');
+        });
+    var current_fs, next_fs, previous_fs; // Fieldsets
+    var left, opacity, scale; // Fieldset properties which we will animate
+    var animating; // Flag to prevent quick multi-click glitches
+
+    /**
+     * Beim Laden der Seite werden Benutzerdaten aus dem LocalStorage abgerufen
+     * und in die entsprechenden Eingabefelder eingefügt.
+     */
+    $(document).ready(function() {
+        const email = localStorage.getItem('signupEmail');
+        const password = localStorage.getItem('signupPassword');
+        const name = localStorage.getItem('signupName');
+        const abo = localStorage.getItem('selectedPlan');
+
+        if (email !== null) {
+            document.querySelector('input[name="email"]').value = email;
+        }
+        if (password !== null) {
+            document.querySelector('input[name="pass"]').value = password;
+        }
+        if (name !== null) {
+            document.querySelector('input[name="cpass"]').value = name;
+        }
+        if (abo !== null) {
+            document.querySelector('input[name="abo"]').value = abo;
+        }
+    });
+
+    /**
+     * Navigiert zum nächsten Fieldset im Multistep-Formular.
+     * Fokussiert auf Animationen und das Aktivieren des Fortschrittsbalkens.
+     */
+    $(".next").click(function () {
+        if (animating) return false;
+        animating = true;
+
+        current_fs = $(this).parent();
+        next_fs = $(this).parent().next();
+
+        // Aktiviert den nächsten Schritt im Fortschrittsbalken
+        $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+        // Zeigt das nächste Fieldset an
+        next_fs.show();
+
+        // Animiert den Übergang zwischen Fieldsets
+        current_fs.animate({ opacity: 0 }, {
+            step: function (now, mx) {
+                scale = 1 - (1 - now) * 0.2;
+                left = now * 50 + "%";
+                opacity = 1 - now;
+                current_fs.css({'transform': 'scale(' + scale + ')', 'position': 'absolute'});
+                next_fs.css({ left: left, opacity: opacity });
+            },
+            duration: 800,
+            complete: function () {
+                current_fs.hide();
+                animating = false;
+            },
+            easing: "easeInOutBack"
+        });
+    });
+
+    /**
+     * Navigiert zurück zum vorherigen Fieldset im Multistep-Formular.
+     * Enthält die gleiche Animation wie die .next-Funktion, jedoch rückwärts.
+     */
+    $(".previous").click(function () {
+        if (animating) return false;
+        animating = true;
+
+        current_fs = $(this).parent();
+        previous_fs = $(this).parent().prev();
+
+        // Deaktiviert den aktuellen Schritt im Fortschrittsbalken
+        $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+        // Zeigt das vorherige Fieldset an
+        previous_fs.show();
+        current_fs.animate({ opacity: 0 }, {
+            step: function (now, mx) {
+                scale = 0.8 + (1 - now) * 0.2;
+                left = (1-now)*50+"%";
+                opacity = 1 - now;
+                current_fs.css({ left: left });
+                previous_fs.css({'transform': 'scale(' + scale + ')', 'opacity': opacity });
+            },
+            duration: 800,
+            complete: function () {
+                current_fs.hide();
+                animating = false;
+            },
+            easing: "easeInOutBack"
+        });
+    });
+
+    /**
+     * Führt die Registrierung aus, indem die Daten an den Server gesendet werden.
+     * Führt eine Validierung der Felder und des AGB-Checkboxes durch.
+     */
+    function regist() {
+        const CardNumber = document.getElementById('card').value;
+        const pin = document.getElementById('pin').value;
+        const date = document.getElementById('date').value;
+        const email = localStorage.getItem('signupEmail');
+        const password = localStorage.getItem('signupPassword');
+        const name = localStorage.getItem('signupName');
+        const abo = localStorage.getItem('selectedPlan');
+
+        if (CardNumber === '' || pin === '' || date === '') {
+            alert('Bitte füllen Sie alle Felder aus.');
+            return;
+        }
+
+        const checkbox = document.getElementById('agb');
+        if (!checkbox.checked) {
+            alert('AGB nicht bestätigt');
+            return;
+        }
+
+        fetch('http://localhost:8080/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password, name, abo }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = 'chat.html';
+            } else {
+                alert('Fehler bei der Registrierung.');
+            }
+        })
+        .catch(() => {
+            alert('Fehler beim Verbinden mit dem Server.');
+        });
+    }
+    </script>
+</body>
+</html>

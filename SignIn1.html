@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In/Up</title>
+    <link rel="stylesheet" href="SignIn.css">
+</head>
+<body>
+
+    <div id="banner" class="hidden">Sign-in successful!</div>
+    <div id="errorMessage" style="color: red; display: none;">Ungültige Anmeldedaten!</div>
+    
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form id="signupForm" method="post">
+                <h1>Create Account</h1>
+                <span>or use your email for registration</span>
+                <input type="text" id="signupName" name="name" placeholder="Name" required />
+                <input type="email" id="signupEmail" name="email" placeholder="Email" required />
+                <input type="password" id="signupPassword" name="password" placeholder="Password" required />
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+
+        <div class="form-container sign-in-container">
+            <form id="signinForm">
+                <h1>Sign in</h1>
+                <span>or use your account</span>
+                <input type="email" id="email" name="email" placeholder="Email" required />
+                <input type="password" id="password" name="password" placeholder="Password" required />
+                <a href="#">Forgot your password?</a>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Fügt beim Klicken des "Sign Up"-Buttons die Klasse "right-panel-active" zum Container hinzu,
+         * um das Layout zu wechseln.
+         */
+        const signUpButton = document.getElementById("signUp");
+        const signInButton = document.getElementById("signIn");
+        const container = document.getElementById("container");
+
+        signUpButton.addEventListener("click", () => {
+            container.classList.add("right-panel-active");
+        });
+
+        /**
+         * Entfernt beim Klicken des "Sign In"-Buttons die Klasse "right-panel-active" vom Container,
+         * um das Layout zurückzuwechseln.
+         */
+        signInButton.addEventListener("click", () => {
+            container.classList.remove("right-panel-active");
+        });
+
+        /**
+         * Verarbeitet das Sign-In-Formular. Sendet die eingegebenen Daten an den Server.
+         * Bei Erfolg wird der Benutzer weitergeleitet, andernfalls wird eine Fehlermeldung angezeigt.
+         *
+         * @param {Event} event Das übergebene Submit-Event des Formulars.
+         */
+        document.getElementById('signinForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            fetch('http://localhost:8080/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+
+                    fetch('http://localhost:8080/name', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email }),
+                    })
+                    .then(response => response.text()) // Verwende .text(), um einen einfachen String zu erwarten
+                    .then(name => { // Ändere 'data' zu 'name' für Klarheit
+                        if (name) { // Überprüfe, ob ein Name zurückgegeben wurde
+                            localStorage.setItem('signupName', name); // Speicherung des Namens im localStorage
+                            window.location.href = 'chat.html'; // Weiterleitung
+                        } else {
+                            displayErrorMessage('Fehler beim Abrufen des Namens');
+                        }
+                    })
+                    .catch(() => {
+                        displayErrorMessage('Fehler beim Verbinden mit dem Server (Name-Anforderung)');
+                    });
+                    
+                    
+                } else {
+                    displayErrorMessage('Ungültige Anmeldedaten');
+                }
+            })
+            .catch(() => {
+                displayErrorMessage('Fehler beim Verbinden mit dem Server');
+            });
+        });
+
+        /**
+         * Verarbeitet das Sign-Up-Formular. Speichert die Benutzerdaten im Local Storage
+         * und leitet den Benutzer zu einer anderen Seite weiter.
+         *
+         * @param {Event} event Das übergebene Submit-Event des Formulars.
+         */
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const name = document.getElementById('signupName').value; 
+
+            if (email === '' || password === '' || name === '') {
+                alert('Bitte füllen Sie alle Felder aus.');
+                return; // Abbruch, wenn ein Feld leer ist
+            }
+
+            // Speichere Daten im localStorage
+            localStorage.setItem('signupEmail', email);
+            localStorage.setItem('signupPassword', password);
+            localStorage.setItem('signupName', name);
+
+            // Korrekte URL zur Zahlungsmittelseite
+            window.location.href = 'Abo.html';
+        });
+
+        /**
+         * Zeigt eine Fehlermeldung auf der Seite an.
+         *
+         * @param {string} message Die anzuzeigende Fehlermeldung.
+         */
+        function displayErrorMessage(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
