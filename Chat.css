@@ -76,6 +76,8 @@ body {
     border-radius: 10px;
     max-width: 70%;
     font-size: 1em;
+    font-family: Lucida Console;
+    font-weight: 500;
 }
 
 .user-message {
@@ -93,4 +95,67 @@ body {
     align-self: center;
     color: red;
     font-weight: bold;
+}
+
+#typingIndicator {
+    display: none;
+    position: relative;
+    background: #b2ebf2; /* Helle Cyan-Farbe passend zur Benutzerfarbe */
+    border-radius: 20px;
+    padding: 10px 15px;
+    max-width: 150px;
+    color: #0073b1; /* Passend zur Hauptbuttonfarbe */
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animierte Punkte */
+.dots {
+    display: inline-flex;
+    margin-left: 5px;
+    position: relative;
+}
+
+.dots span {
+    display: block;
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background-color: #0073b1; /* Gleiche Farbe wie die Schaltfläche „Senden“ */
+    border-radius: 50%;
+    animation: bounce 1.4s infinite;
+}
+
+.dots span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
