@@ -105,7 +105,7 @@
                     .then(name => { // Ändere 'data' zu 'name' für Klarheit
                         if (name) { // Überprüfe, ob ein Name zurückgegeben wurde
                             localStorage.setItem('signupName', name); // Speicherung des Namens im localStorage
-                            window.location.href = 'chat.html'; // Weiterleitung
+                            window.location.href = 'Chat3.html'; // Weiterleitung
                         } else {
                             displayErrorMessage('Fehler beim Abrufen des Namens');
                         }
@@ -142,13 +142,26 @@
                 return; // Abbruch, wenn ein Feld leer ist
             }
 
-            // Speichere Daten im localStorage
-            localStorage.setItem('signupEmail', email);
-            localStorage.setItem('signupPassword', password);
-            localStorage.setItem('signupName', name);
-
-            // Korrekte URL zur Zahlungsmittelseite
-            window.location.href = 'Abo.html';
+            // Sende eine Anfrage zum Registrieren des Nutzers
+            fetch('http://localhost:8080/signUpValid', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Weiterleitung zur Abo-Seite
+                    window.location.href = 'Abo.html';
+                } else {
+                    displayErrorMessage('Passwort muss Klein- und Großbuchstaben enthalten');
+                }
+            })
+            .catch(() => {
+                displayErrorMessage('Fehler beim Verbinden mit dem Server');
+            });
         });
 
         /**

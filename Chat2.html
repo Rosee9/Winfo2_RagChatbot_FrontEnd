@@ -190,6 +190,22 @@
                 alert('Dokument konnte nicht gelöscht werden');
             });
         }
+
+        //New
+        document.addEventListener('DOMContentLoaded', () => {
+            const welcomeMessageElement = document.getElementById('welcomeMessage');
+            welcomeMessageElement.textContent = `Welcome to Chatbot, ${name}`;
+        
+            // Dokumente laden und anzeigen
+            fetch('http://localhost:8080/documents')
+                .then(response => response.json())
+                .then(documents => {
+                    documents.forEach(addDocumentToList);
+                })
+                .catch(() => {
+                    console.error('Fehler beim Abrufen der Dokumente');
+                });
+        });
     </script>
 </body>
 </html>
