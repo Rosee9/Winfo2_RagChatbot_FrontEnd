@@ -1,5 +1,5 @@
 # RAG-Chatbot Frontend
-**Autor:** E. Ekinci
+**Autor u. Entwickler:** E. Ekinci
 
 ## Übersicht
 
