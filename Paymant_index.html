@@ -24,7 +24,7 @@
         <!-- Fieldsets -->
         <fieldset>
             <h2 class="fs-title">Account Data</h2>
-            <h3 class="fs-subtitle">This is step 1</h3>
+            <h3 class="fs-subtitle">You</h3>
             <input type="text" name="email" id="email" placeholder="Email" disabled />
             <input type="text" name="cpass" id="cpass" placeholder="Name" disabled />
             <input type="button" name="previous" class="next action-button" id="abos" value="Abo" />
@@ -60,7 +60,7 @@
 
     <script>
         document.getElementById('abos').addEventListener('click', function() {
-            window.open('Abo.html', '_blank');
+            window.location.href = 'Abo.html'
         });
     var current_fs, next_fs, previous_fs; // Fieldsets
     var left, opacity, scale; // Fieldset properties which we will animate
@@ -72,15 +72,11 @@
      */
     $(document).ready(function() {
         const email = localStorage.getItem('signupEmail');
-        const password = localStorage.getItem('signupPassword');
         const name = localStorage.getItem('signupName');
         const abo = localStorage.getItem('selectedPlan');
 
         if (email !== null) {
             document.querySelector('input[name="email"]').value = email;
-        }
-        if (password !== null) {
-            document.querySelector('input[name="pass"]').value = password;
         }
         if (name !== null) {
             document.querySelector('input[name="cpass"]').value = name;

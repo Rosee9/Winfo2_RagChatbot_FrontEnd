@@ -105,7 +105,7 @@
                     .then(name => { // Ändere 'data' zu 'name' für Klarheit
                         if (name) { // Überprüfe, ob ein Name zurückgegeben wurde
                             localStorage.setItem('signupName', name); // Speicherung des Namens im localStorage
-                            window.location.href = 'Chat3.html'; // Weiterleitung
+                            window.location.href = 'Chat4.html'; // Weiterleitung
                         } else {
                             displayErrorMessage('Fehler beim Abrufen des Namens');
                         }
@@ -154,6 +154,8 @@
             .then(data => {
                 if (data.success) {
                     // Weiterleitung zur Abo-Seite
+                    localStorage.setItem('signupName', name);
+                    localStorage.setItem('signupEmail', email);
                     window.location.href = 'Abo.html';
                 } else {
                     displayErrorMessage('Passwort muss Klein- und Großbuchstaben enthalten');

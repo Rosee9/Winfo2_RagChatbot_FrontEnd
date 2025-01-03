@@ -231,3 +231,10 @@ body {
     background-color: #ff4d4d;
     transform: translateY(-2px); /* Sanftes Verschieben beim Hovern */
 }
+
+#storageSize {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    color: #0073b1;
+    font-weight: bold;
+}
