@@ -29,9 +29,14 @@ Das RAG-Chatbot Frontend bietet eine benutzerfreundliche Oberfläche, die Benutz
   - Das Frontend nutzt API-Endpunkte des [RAG-Chatbot Backend](https://github.com/Rosee9/Winfo2_RagChatbot) für alle serverseitigen Funktionen.
   - Die Kommunikation umfasst die Anmeldung, Registrierung sowie das Hochladen und Löschen von PDFs.
 
+- **Erweiterte Funktionen:**
+  - Nutzer des teuersten Abomodells erhalten Zugriff auf eine Statistikfunktion, die die Anzahl der gesendeten Nachrichten anzeigt.
+
 ## Voraussetzungen
 
 - **Aktives Backend:** Das Spring Boot Backend muss aktiv sein, bevor mit dem Frontend interagiert wird. Hinweise dazu finden sich in der Backend-README-Datei.
+- **Live Server Erweiterung:** Installiere die Erweiterung, um das Frontend auf dem empfohlenen Port 5500 zu starten.
+  - Dies verhindert mögliche Kommunikationsprobleme zwischen Frontend und Backend.
 
 ## Setup-Anleitung
 
@@ -40,6 +45,7 @@ Das RAG-Chatbot Frontend bietet eine benutzerfreundliche Oberfläche, die Benutz
 
 2. **Frontend verwenden**
    - Öffne die `SignIn1.html` in einem Webbrowser, um mit dem System zu interagieren.
+   - Starte das Frontend idealerweise auf Port 5500 mithilfe der Live Server Erweiterung.
    - Folge den Anweisungen auf dem Bildschirm zur Anmeldung oder Registrierung.
 
 ## Funktionen
@@ -55,6 +61,7 @@ Das RAG-Chatbot Frontend bietet eine benutzerfreundliche Oberfläche, die Benutz
 ## Hinweise
 
 - Für eine reibungslose Nutzung sollten das Frontend und das Backend konsistent miteinander kommunizieren. Beginne immer auf `SignIn1.html` und teste sorgfältig, um sicherzustellen, dass alle Funktionen korrekt synchronisiert sind.
+- Starte das Frontend auf Port 5500, um optimale Funktionalität und Kompatibilität zu gewährleisten.
 
 ## Unterstützung
 
