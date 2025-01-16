@@ -11,6 +11,12 @@
     <div class="main-container">
         <div class="chat-container">
             <button id="deleteChat">Chat löschen</button>
+            <button id="supportButton">Support</button>
+            <div id="analyticsData" style="display: none;">
+                <p id="successRate"></p>
+                <p id="averageLatency"></p>
+                <p id="callCount"></p>
+            </div>
             <div class="chat-header">
                 <h2 id="welcomeMessage">Welcome to Chatbot</h2>
             </div>
@@ -31,7 +37,7 @@
             <div id="documentList"></div>
         </div>
     </div>
-    
+
     <script>
         const name = localStorage.getItem('signupName') || 'Gast';
 
@@ -40,7 +46,8 @@
             welcomeMessageElement.textContent = `Welcome to Chatbot, ${name}`;
         
             updateStorageSize();
-        
+            updateAnalytics(); // Analytics direkt nach dem Laden der Seite abrufen
+
             fetch('http://localhost:8080/documents')
                 .then(response => response.json())
                 .then(documents => {
@@ -85,7 +92,6 @@
 
         function sendMessage() {
             const messageText = userInput.value.trim();
-
             if (!messageText) return;
 
             const userMessage = document.createElement('div');
@@ -115,6 +121,8 @@
                     errorMessage.textContent = 'Keine Verbindung gefunden';
                     chatBox.prepend(errorMessage);
                 });
+            
+            updateAnalytics(); // Analytics nach dem Senden einer Nachricht abrufen
         }
 
         function uploadPdf(file) {
@@ -132,7 +140,7 @@
                 hideTypingIndicator();
 
                 addDocumentToList(file.name);
-                updateStorageSize(); // Aktualisiere die Speichergröße
+                updateStorageSize();
 
                 const botMessage = document.createElement('div');
                 botMessage.className = 'message bot-message';
@@ -147,6 +155,8 @@
                 errorMessage.textContent = 'PDF konnte nicht hochgeladen werden';
                 chatBox.prepend(errorMessage);
             });
+
+            updateAnalytics(); // Analytics nach dem Hochladen eines PDFs abrufen
         }
 
         function addDocumentToList(fileName) {
@@ -174,11 +184,13 @@
             .then(response => response.text())
             .then(data => {
                 documentElement.remove();
-                updateStorageSize(); // Aktualisiere die Speichergröße
+                updateStorageSize();
             })
             .catch(() => {
                 alert('Dokument konnte nicht gelöscht werden');
             });
+
+            updateAnalytics(); // Analytics nach dem Löschen eines Dokuments abrufen
         }
 
         function updateStorageSize() {
@@ -188,21 +200,40 @@
                     let used = storageInfo.used;
                     let total = storageInfo.total;
         
-                    // Die Verwendung von Math.abs() stellt sicher, dass keine negativen Nullwerte angezeigt werden
                     used = Math.abs(used);
                     total = Math.abs(total);
         
                     const storageSizeElement = document.getElementById('storageSize');
                     storageSizeElement.textContent = `Speicher: ${used.toFixed(2)} GB von ${total.toFixed(2)} GB`;
         
-                    if (total > 0 && (used / total) >= 0.9) {
-                        storageSizeElement.style.color = 'red';
-                    } else {
-                        storageSizeElement.style.color = ''; // Standardfarbe
-                    }
+                    storageSizeElement.style.color = total > 0 && (used / total) >= 0.9 ? 'red' : '';
                 })
                 .catch(() => {
                     console.error('Fehler beim Abrufen der Speichergröße');
+                });
+        }
+
+        function updateAnalytics() {
+            fetch('http://localhost:8080/customerAnalytics')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || Object.keys(data).length === 0) {
+                        document.getElementById('analyticsData').style.display = 'none';
+                        return;
+                    }
+
+                    document.getElementById('successRate').textContent = `Success Rate: ${data.successRate}%`;
+                    document.getElementById('averageLatency').textContent = `Average Latency: ${data.averageLatency}ms`;
+                    document.getElementById('callCount').textContent = `Call Count: ${data.callCount}`;
+
+                    document.getElementById('successRate').style.color = 'green';
+                    document.getElementById('averageLatency').style.color = 'green';
+                    document.getElementById('callCount').style.color = 'green';
+
+                    document.getElementById('analyticsData').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error fetching analytics', error);
                 });
         }
 
@@ -227,6 +258,14 @@
             .catch((error) => {
                 console.error('Verbindung zum Server fehlgeschlagen', error);
             });
+        });
+
+        const supportButton = document.getElementById('supportButton');
+        supportButton.addEventListener('click', function() {
+            const subject = `Chat von ${name}`;
+            const email = 'ragchatbothft@gmail.com';
+            
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
         });
     </script>
 </body>

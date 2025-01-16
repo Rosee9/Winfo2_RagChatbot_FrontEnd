@@ -238,3 +238,37 @@ body {
     color: #0073b1;
     font-weight: bold;
 }
+
+
+
+
+#supportButton {
+    position: absolute;
+    right: 20px;
+    top: 60px; /* Just below the delete button */
+    padding: 10px 20px;
+    background-color: #0073b1; /* Matching existing colors */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#supportButton:hover {
+    background-color: #00a6ff;
+    transform: translateY(-2px);
+}
+
+#analyticsData {
+    position: absolute;
+    right: 20px;
+    top: 100px; /* Just below the support button */
+    background-color: #e0f7fa;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 0.9em;
+    color: #0073b1;
+}
